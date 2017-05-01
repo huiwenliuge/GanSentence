@@ -476,7 +476,7 @@ void LeftGene::SetDLDG(Sentence inSen){
     Sentence stmp = inSen;
     while(gtmp){
         std::cout<<gtmp->num<<" "<<stmp->num<<std::endl;
-        memcpy(gtmp->DLDG,stmp->DLDx[stmp->tlen-1],sizeof(double)*featureNUM);
+        memcpy(gtmp->DLDG,stmp->DLDx[0],sizeof(double)*featureNUM);
         std::cout<<stmp->schar<<std::endl;
         std::cout<<gtmp->schar<<std::endl;
         gtmp = gtmp->next;
@@ -731,11 +731,11 @@ void LeftGene::prtSent(const char* path){
     while(tmp){
         fprintf(fp,"{\n");
         fprintf(fp,"%s %d\ninVec:{\n",tmp->schar,tmp->tlen);
-        // for(i=0;i<tmp->tlen;++i){
-        //     for(j=0;j<featureNUM;++j)
-        //         fprintf(fp,"%f ",tmp->inVec[i][j]);
-        //     fprintf(fp,"\n");
-        // }
+        for(i=0;i<tmp->tlen;++i){
+            for(j=0;j<featureNUM;++j)
+                fprintf(fp,"%f ",tmp->inVec[i][j]);
+            fprintf(fp,"\n");
+        }
         // fprintf(fp,"}\nhidLay:{\n");
         // for(i=0;i<tmp->tlen;++i){
         //     for(j=0;j<hidlayerNUM;++j)
@@ -774,10 +774,27 @@ void LeftGene::prtGene(const char* path){
     Genesent tmp=sent;
     ChUTF8 ctmp;
     while(tmp){
-        ctmp = minCrossEntropy(ccdict,tmp->eng,featureNUM);
+        ctmp = minAngle(ccdict,tmp->eng,featureNUM);
         fprintf(fp,"%s%s\n",ctmp->schar,tmp->schar);
         tmp=tmp->next;
     }
+    fclose(fp);
+}
+
+void LeftGene::prtGene_Vec(const char* path){
+    FILE* fp = fopen(path,"w");
+    Genesent tmp=sent;
+    
+    int i;
+    while(tmp){
+        fprintf(fp,"%s\n",tmp->schar);
+        for(i=0;i<featureNUM;++i){
+            fprintf(fp,"#%lf#",tmp->eng[i]);
+        }
+        fputc('\n',fp);
+        tmp=tmp->next;
+    }
+    fclose(fp);
 }
 
 void LeftGene::init_thread(int n){

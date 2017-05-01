@@ -279,20 +279,33 @@ void upDictbyTab(ChUTF8* tab,ChUTF8* ttab,int indim,double lnrt){
     }
 }
 
-ChUTF8 minCrossEntropy(ChUTF8* tab,double* invec,int indim){
+ChUTF8 minAngle(ChUTF8* tab,double* invec,int indim){
 
     int i,j;
     ChUTF8 tmp,ret;
     double dtmp,mince;
+    double num,den;
+    double mlong;
+    mlong=0.0;
+    for(i=0;i<indim;++i){
+        mlong+=pow(invec[i],2);
+    }
+    mlong=sqrt(mlong);
+    
     mince=-10000;
     ret = NULL;
     for(i=0;i<32*64*64;++i){
         tmp=tab[i];
         while(tmp){
-            dtmp=0.0;
+            den=0.0;
+            num=0.0;
             for(j=0;j<indim;++j){
-                dtmp+=tmp->vecftr[j]*log(invec[j]);
+                den+=pow(tmp->vecftr[j],2);
+                num+=invec[j]*tmp->vecftr[j];
             }
+            den=sqrt(den);
+            den*=mlong;
+            dtmp=num/den;
             if(dtmp>mince){
                 mince=dtmp;
                 ret=tmp;

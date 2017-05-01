@@ -48,6 +48,7 @@ class RNNet{
         double RNNForward_CROSSENTROPY(const char* pathRoot);
         double RNNForward_CROSSENTROPY_Nthread(const char* pathRoot,int Nthread);
         void RNNBackward_CROSSENTROPY(double lnrt);
+        void RNNBackward_CROSSENTROPY_Without_Update();
         void RNNBackward_CROSSENTROPY_Nthread(double lnrt,int Nthread);
 
 

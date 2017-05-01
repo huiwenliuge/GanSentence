@@ -49,6 +49,7 @@ class LeftGene{
         void prtPara(const char* path);
 
         void prtGene(const char* path);
+        void prtGene_Vec(const char* path);
 
         ChUTF8* ccdict;
         ChUTF8* tdict;

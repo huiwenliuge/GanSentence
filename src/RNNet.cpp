@@ -97,60 +97,119 @@ Sentence RNNet::FetchSent(const char* pathRoot){
     char* line=(char*)calloc(sizeof(char),421);
     totnum = 0;
     pathrootlen=strlen(pathRoot);
-    for(i=0;i<EMOTIONNUM;++i){
-        filelist[i]=(char*)calloc(sizeof(char),101);
-        strcpy(filelist[i],pathRoot);
-        strcpy(filelist[i]+pathrootlen,EMOLIST[i]);
-        std::cout<< filelist[i] <<std::endl;
+    
+    
+    filelist[0]=(char*)calloc(sizeof(char),101);
+    strcpy(filelist[0],pathRoot);
+    strcpy(filelist[0]+pathrootlen,EMOLIST[0]);
+    std::cout<< filelist[0] <<std::endl;
 
-        sentfp=fopen(filelist[i],"r");
-        // const double* ans=(double*)calloc(sizeof(double),EMOTIONNUM);
-        // ans[i]=1.0;
-        //genenum = totnum;
-        while(fscanf(sentfp,"%s\n",line)!=-1){
+    sentfp=fopen(filelist[0],"r");
+    // const double* ans=(double*)calloc(sizeof(double),EMOTIONNUM);
+    // ans[i]=1.0;
+    //genenum = totnum;
+    while(fscanf(sentfp,"%s\n",line)!=-1){
 
-            len=strLenUTF8(line);
-            Sentence sentunit=(Sentence)malloc(sizeof(struct sentence));
-            sentunit->num = totnum;
-            totnum++;
-            sentunit->schar=line;
-            sentunit->tlen=len;
-            sentunit->inVec=crtInvec(line,featureNUM,ccdict);
-            sentunit->hidLay=(double**)malloc(sizeof(double*)*len);
-            sentunit->kLayer=(double**)malloc(sizeof(double*)*len);
-            sentunit->outLay=(double**)malloc(sizeof(double*)*len);
-            sentunit->DLDo  =(double**)malloc(sizeof(double*)*len);
-            sentunit->DLDh  =(double**)malloc(sizeof(double*)*len);
-            sentunit->DLDx  =(double**)malloc(sizeof(double*)*len);
-            sentunit->energy=(double**)malloc(sizeof(double*)*len);
-            sentunit->stdAns=(double*)calloc(sizeof(double),EMOTIONNUM);
-            sentunit->eng=(double*)calloc(sizeof(double),EMOTIONNUM);
+        len=strLenUTF8(line);
+        Sentence sentunit=(Sentence)malloc(sizeof(struct sentence));
+        sentunit->num = totnum;
+        totnum++;
+        sentunit->schar=line;
+        sentunit->tlen=len;
+        sentunit->inVec=crtInvec(line,featureNUM,ccdict);
+        sentunit->hidLay=(double**)malloc(sizeof(double*)*len);
+        sentunit->kLayer=(double**)malloc(sizeof(double*)*len);
+        sentunit->outLay=(double**)malloc(sizeof(double*)*len);
+        sentunit->DLDo  =(double**)malloc(sizeof(double*)*len);
+        sentunit->DLDh  =(double**)malloc(sizeof(double*)*len);
+        sentunit->DLDx  =(double**)malloc(sizeof(double*)*len);
+        sentunit->energy=(double**)malloc(sizeof(double*)*len);
+        sentunit->stdAns=(double*)calloc(sizeof(double),EMOTIONNUM);
+        sentunit->eng=(double*)calloc(sizeof(double),EMOTIONNUM);
 
-            for(j=0;j<len;++j){
-                // for(int k=0;k<featureNUM;++k){
-                //     std::cout<<sentunit->inVec[j][k];
-                // }
-                //std::cout<<std::endl;
-                sentunit->energy[j]=(double*)calloc(sizeof(double),EMOTIONNUM);
-                sentunit->hidLay[j]=(double*)calloc(sizeof(double),hidlayerNUM);
-                sentunit->kLayer[j]=(double*)calloc(sizeof(double),hidlayerNUM);
-                sentunit->outLay[j]=(double*)calloc(sizeof(double),EMOTIONNUM);
-                sentunit->DLDo[j]  =(double*)calloc(sizeof(double),EMOTIONNUM);
-                sentunit->DLDh[j]  =(double*)calloc(sizeof(double),hidlayerNUM);
-                sentunit->DLDx[j]  =(double*)calloc(sizeof(double),featureNUM);
-            }
-
-            sentunit->stdAns[i]=1.0;
-            sentunit->next=sent;
-            sent=sentunit;
-
-            //std::cout<< totnum <<std::endl;        
-            line=(char*)calloc(sizeof(char),421);
+        for(j=0;j<len;++j){
+            // for(int k=0;k<featureNUM;++k){
+            //     std::cout<<sentunit->inVec[j][k];
+            // }
+            //std::cout<<std::endl;
+            sentunit->energy[j]=(double*)calloc(sizeof(double),EMOTIONNUM);
+            sentunit->hidLay[j]=(double*)calloc(sizeof(double),hidlayerNUM);
+            sentunit->kLayer[j]=(double*)calloc(sizeof(double),hidlayerNUM);
+            sentunit->outLay[j]=(double*)calloc(sizeof(double),EMOTIONNUM);
+            sentunit->DLDo[j]  =(double*)calloc(sizeof(double),EMOTIONNUM);
+            sentunit->DLDh[j]  =(double*)calloc(sizeof(double),hidlayerNUM);
+            sentunit->DLDx[j]  =(double*)calloc(sizeof(double),featureNUM);
         }
-        fclose(sentfp);
 
+        sentunit->stdAns[0]=1.0;
+        sentunit->next=sent;
+        sent=sentunit;
+
+        //std::cout<< totnum <<std::endl;        
+        line=(char*)calloc(sizeof(char),421);
     }
+    fclose(sentfp);
 
+    filelist[1]=(char*)calloc(sizeof(char),101);
+    strcpy(filelist[1],pathRoot);
+    strcpy(filelist[1]+pathrootlen,EMOLIST[1]);
+    std::cout<< filelist[1] <<std::endl;
+
+    sentfp=fopen(filelist[1],"r");
+
+    double** invtmp;
+    char* schartmp;
+    while(fscanf(sentfp,"%s\n",line)!=-1){
+        
+        len=strLenUTF8(line)+1;
+        Sentence sentunit=(Sentence)malloc(sizeof(struct sentence));
+        sentunit->num = totnum;
+        totnum++;
+        //sentunit->schar=line;
+        schartmp=line;
+        sentunit->schar=(char*)calloc(sizeof(char),len);
+        sentunit->tlen=len;
+        //sentunit->inVec=crtInvec(line,featureNUM,ccdict);
+        invtmp=crtInvec(line,featureNUM,ccdict);
+        sentunit->inVec=(double**)malloc(sizeof(double)*len);
+        sentunit->hidLay=(double**)malloc(sizeof(double*)*len);
+        sentunit->kLayer=(double**)malloc(sizeof(double*)*len);
+        sentunit->outLay=(double**)malloc(sizeof(double*)*len);
+        sentunit->DLDo  =(double**)malloc(sizeof(double*)*len);
+        sentunit->DLDh  =(double**)malloc(sizeof(double*)*len);
+        sentunit->DLDx  =(double**)malloc(sizeof(double*)*len);
+        sentunit->energy=(double**)malloc(sizeof(double*)*len);
+        sentunit->stdAns=(double*)calloc(sizeof(double),EMOTIONNUM);
+        sentunit->eng=(double*)calloc(sizeof(double),EMOTIONNUM);
+
+        sentunit->inVec[0]=(double*)malloc(sizeof(double)*featureNUM);
+        for(i=0;i<featureNUM;++i){
+            fscanf(sentfp,"#%lf#",sentunit->inVec[0]+i);
+        }
+        fgetc(sentfp);
+        sentunit->schar[0]='*';
+        for(j=1;j<len;++j){
+            sentunit->inVec[j]=invtmp[j-1];
+        }
+        strcpy(sentunit->schar+1,schartmp);
+        for(j=0;j<len;++j){
+            // for(int k=0;k<featureNUM;++k){
+            //     std::cout<<sentunit->inVec[j][k];
+            // }
+            //std::cout<<std::endl;
+            sentunit->energy[j]=(double*)calloc(sizeof(double),EMOTIONNUM);
+            sentunit->hidLay[j]=(double*)calloc(sizeof(double),hidlayerNUM);
+            sentunit->kLayer[j]=(double*)calloc(sizeof(double),hidlayerNUM);
+            sentunit->outLay[j]=(double*)calloc(sizeof(double),EMOTIONNUM);
+            sentunit->DLDo[j]  =(double*)calloc(sizeof(double),EMOTIONNUM);
+            sentunit->DLDh[j]  =(double*)calloc(sizeof(double),hidlayerNUM);
+            sentunit->DLDx[j]  =(double*)calloc(sizeof(double),featureNUM);
+        }
+        sentunit->stdAns[1]=1.0;
+        sentunit->next=sent;
+        sent=sentunit;
+    }
+    fclose(sentfp);
     for(i=0;i<EMOTIONNUM;++i)
         free(filelist[i]);
     //fclose(sentfp);
@@ -368,6 +427,28 @@ void RNNet::RNNBackward_CROSSENTROPY(double lnrate){
 
 }
 
+void RNNet::RNNBackward_CROSSENTROPY_Without_Update(){
+
+    lnrt=0.0;
+    int i;
+    for(i=0;i<hidlayerNUM;++i){
+        memset(DLDin2hid[i],'\0',sizeof(double)*featureNUM);
+        memset(DLDrh2h[i],'\0',sizeof(double)*hidlayerNUM);
+        memset(DLDro2h[i],'\0',sizeof(double)*EMOTIONNUM);
+    }
+    for(i=0;i<EMOTIONNUM;++i)
+        memset(DLDk2out[i],'\0',sizeof(double)*hidlayerNUM);
+
+    Sentence sentmp = sent;
+
+    while(sentmp){
+        _Backward_CROSSENTROPY(sentmp);
+        sentmp=sentmp->next;
+    }
+    
+
+}
+
 void RNNet::RNNBackward_CROSSENTROPY_Nthread(double lnrts,int Nthread){
     lnrt=lnrts;
     int i;
@@ -535,11 +616,15 @@ void RNNet::_Backward_CROSSENTROPY(Sentence sen){
             // }
         }
     }
-    
+    std::cout<<"ssss"<<std::endl;
     double plnrt = lnrt/sen->tlen;
     static std::mutex g_mutex;
     g_mutex.lock();
-    upgradeDict(ccdict,sen->schar,sen->DLDx,featureNUM,plnrt);    
+    if(sen->stdAns[0]==1.0){
+        upgradeDict(ccdict,sen->schar,sen->DLDx,featureNUM,plnrt);
+    }else{
+        upgradeDict(ccdict,sen->schar+1,sen->DLDx+1,featureNUM,plnrt);
+    }    
     g_mutex.unlock();
     double pder;
     for(i=0;i<EMOTIONNUM;++i){
@@ -554,7 +639,7 @@ void RNNet::_Backward_CROSSENTROPY(Sentence sen){
             g_mutex.unlock();
         }
     }
-    
+    std::cout<<"ssss"<<std::endl;
     for(i=0;i<hidlayerNUM;++i){
         for(j=0;j<featureNUM;++j){
             pder=0.0;
@@ -730,11 +815,11 @@ void RNNet::prtSent(const char* path){
     while(tmp){
         fprintf(fp,"{\n");
         fprintf(fp,"%s %d\ninVec:{\n",tmp->schar,tmp->tlen);
-        // for(i=0;i<tmp->tlen;++i){
-        //     for(j=0;j<featureNUM;++j)
-        //         fprintf(fp,"%f ",tmp->inVec[i][j]);
-        //     fprintf(fp,"\n");
-        // }
+        for(i=0;i<tmp->tlen;++i){
+            for(j=0;j<featureNUM;++j)
+                fprintf(fp,"%f ",tmp->inVec[i][j]);
+            fprintf(fp,"\n");
+        }
         // fprintf(fp,"}\nhidLay:{\n");
         // for(i=0;i<tmp->tlen;++i){
         //     for(j=0;j<hidlayerNUM;++j)
@@ -753,7 +838,7 @@ void RNNet::prtSent(const char* path){
         //         fprintf(fp,"%f ",tmp->outLay[i][j]);
         //     fprintf(fp,"\n");
         // }
-        fprintf(fp,"}\nDLDx:{\n");
+        // fprintf(fp,"}\nDLDx:{\n");
         for(j=0;j<featureNUM;++j)
             fprintf(fp,"%f ",tmp->DLDx[tmp->tlen-1][j]);
         fprintf(fp,"\n");

@@ -85,6 +85,6 @@ void upgradeDict(ChUTF8* tab,char* str,double** dInvec,int indim,double lnrt);
 
 void upDictbyTab(ChUTF8* tab,ChUTF8* ttab,int indim,double lnrt);
 
-ChUTF8 minCrossEntropy(ChUTF8* tab,double* invec,int indim);
+ChUTF8 minAngle(ChUTF8* tab,double* invec,int indim);
 
 #endif
